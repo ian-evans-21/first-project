@@ -12,6 +12,13 @@ type OpenMeteoResponse = {
   };
 };
 
+function weatherEmojiForCelsius(celsius: number): string {
+  if (celsius < 5) return "❄️";
+  if (celsius < 15) return "🌥️";
+  if (celsius < 25) return "☀️";
+  return "🌡️";
+}
+
 export default async function Home() {
   const res = await fetch(OPEN_METEO_URL, {
     next: { revalidate: 300 },
@@ -43,12 +50,20 @@ export default async function Home() {
     );
   }
 
+  const weatherEmoji = weatherEmojiForCelsius(temp);
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 px-6 font-sans dark:bg-black">
       <div className="max-w-md text-center">
         <h1 className="mb-8 text-2xl font-semibold tracking-tight text-black dark:text-zinc-50">
           London weather
         </h1>
+        <p
+          className="mb-6 text-7xl leading-none sm:text-8xl"
+          aria-hidden
+        >
+          {weatherEmoji}
+        </p>
         <dl className="flex flex-col gap-6 text-left sm:flex-row sm:justify-center sm:gap-12 sm:text-center">
           <div>
             <dt className="text-sm font-medium text-zinc-500 dark:text-zinc-400">
